@@ -1,0 +1,36 @@
+.results {
+    display: flex;
+}
+
+.resultsLeft {
+    flex: 1 1 0;
+    margin: 10px;
+    padding: 3px;
+}
+
+.resultsRight {
+    flex: 1 1 0;
+    margin: 10px;
+    padding: 3px;
+    align-content: right;
+    text-align: right;
+}
+
+.resultline {
+    margin-bottom: 25px;
+    display: flex;
+}
+
+.rlabel {
+    flex: 0 0 130px;
+    text-align: left;
+}
+
+.rbar {
+    flex: 1 0 auto;
+}
+
+.rzscore {
+    flex: 0 0 45px;
+    text-align: right;
+}
