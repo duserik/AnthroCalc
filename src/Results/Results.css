@@ -17,7 +17,7 @@
 }
 
 .resultline {
-    margin-bottom: 25px;
+    margin-bottom: 10px;
     display: flex;
 }
 
@@ -31,6 +31,17 @@
 }
 
 .rzscore {
-    flex: 0 0 45px;
+    flex: 0 0 40px;
     text-align: right;
+}
+
+.rchartbutton {
+    flex: 0 0 20px;
+    width: 100%;
+    margin-left: 10px;
+}
+
+p {
+  margin-top: 5px;
+  margin-bottom: 5px;
 }

@@ -24,7 +24,7 @@ export default class Calculator extends React.Component {
       weight: 9,
       height: 73,
 
-      headCircumference: 45,
+      head: 45,
       muac: 15,
       triceps: 8,
       subscapular: 7,
@@ -126,7 +126,7 @@ export default class Calculator extends React.Component {
     let headCircumference = parseFloat(event.target.value);
     headCircumference = Math.round(headCircumference * 100) / 100;
     this.setState({
-      headCircumference: headCircumference,
+      head: headCircumference,
     });
   }
 
@@ -213,98 +213,103 @@ export default class Calculator extends React.Component {
 
             <Divider />
 
-            <div className="dateOfVisit">
-              Date of visit:
-              <DatePicker
-                hintText="Choose a date"
-                container="inline"
-                autoOk={true}
-                mode="landscape"
-                firstDayOfWeek={0}
-                value={this.state.dateOfVisit}
-                onChange={(event, date) => this.setDateOfVisit(date)}
-                />
-            </div>
+            <div className="splitter">
+              <div className="leftSide">
+                <div className="dateOfVisit">
+                  Date of visit:
+                  <DatePicker
+                    hintText="Choose a date"
+                    container="inline"
+                    autoOk={true}
+                    mode="landscape"
+                    firstDayOfWeek={0}
+                    value={this.state.dateOfVisit}
+                    onChange={(event, date) => this.setDateOfVisit(date)}
+                    />
+                </div>
 
-            <div className="dateOfBirth">
-              Date of birth:
-              <DatePicker
-                hintText="Choose a date"
-                container="inline"
-                autoOk={true}
-                mode="landscape"
-                firstDayOfWeek={0}
-                value={this.state.dateOfBirth}
-                onChange={(event, date) => this.setDateOfBirth(date)}
-                disabled={this.state.unknownBirthDate}
-                />
-              <RaisedButton
-                label="approximate"
-                style={{marginLeft: 12}}
-                onClick={() => this.randomDateOfBirth()}
-                />
-              <RaisedButton
-                label="unknown"
-                style={{margin: 0}}
-                secondary={this.state.unknownBirthDate}
-                onClick={() => this.unknownDateOfBirth()}
-                />
-            </div>
-
-            <Divider />
-
-            <div className="sex">
-              <div className="text">
-                Sex:
+                <div className="dateOfBirth">
+                  Date of birth:
+                  <DatePicker
+                    hintText="Choose a date"
+                    container="inline"
+                    autoOk={true}
+                    mode="landscape"
+                    firstDayOfWeek={0}
+                    value={this.state.dateOfBirth}
+                    onChange={(event, date) => this.setDateOfBirth(date)}
+                    disabled={this.state.unknownBirthDate}
+                    />
+                  <RaisedButton
+                    label="approximate"
+                    style={{marginLeft: 12}}
+                    onClick={() => this.randomDateOfBirth()}
+                    />
+                  <RaisedButton
+                    label="unknown"
+                    style={{margin: 0}}
+                    secondary={this.state.unknownBirthDate}
+                    onClick={() => this.unknownDateOfBirth()}
+                    />
+                </div>
               </div>
-              <RaisedButton
-                label="female"
-                style={{marginLeft: 12}}
-                secondary={this.state.sex === 'female'}
-                onClick={() => this.setSex('female')}
-                />
-              <RaisedButton
-                label="male"
-                style={{margin: 0}}
-                primary={this.state.sex === 'male'}
-                onClick={() => this.setSex('male')}
-                />
-            </div>
 
-            <div className="measurement">
-              <div className="text">
-                Measured:
-              </div>
-              <RaisedButton
-                label="recumbent"
-                style={{marginLeft:12}}
-                primary={this.state.recumbent}
-                onClick={() => this.setRecumbentStatus()}
-                />
-              <RaisedButton
-                label="standing"
-                style={{margin: 0}}
-                primary={!this.state.recumbent}
-                onClick={() => this.setRecumbentStatus()}
-                />
-            </div>
+              <div className="rightSide">
+                <div className="optionbuttons">
+                  <div className="sex">
+                    <RaisedButton
+                      label="female"
+                      style={{marginLeft: 12}}
+                      primary={this.state.sex === 'female'}
+                      onClick={() => this.setSex('female')}
+                      />
+                    <RaisedButton
+                      label="male"
+                      style={{margin: 0}}
+                      primary={this.state.sex === 'male'}
+                      onClick={() => this.setSex('male')}
+                      />
+                  </div>
 
-            <div className="oedema">
-              <div className="text">
-                Oedema:
+                  <div className="measurement">
+                    <RaisedButton
+                      label="recumbent"
+                      style={{marginLeft:12}}
+                      primary={this.state.recumbent}
+                      onClick={() => this.setRecumbentStatus()}
+                      />
+                    <RaisedButton
+                      label="standing"
+                      style={{margin: 0}}
+                      primary={!this.state.recumbent}
+                      onClick={() => this.setRecumbentStatus()}
+                      />
+                  </div>
+
+                  <div className="oedema">
+                    <RaisedButton
+                      label="no oedema"
+                      style={{marginLeft: 12}}
+                      primary={!this.state.oedema}
+                      onClick={() => this.setOedemaStatus()}
+                      />
+                    <RaisedButton
+                      label="oedema"
+                      style={{margin: 0}}
+                      secondary={this.state.oedema}
+                      onClick={() => this.setOedemaStatus()}
+                      />
+                  </div>
+
+                  <div className="inputbox">
+                    BMI: {this.getBmi()}
+                  </div>
+
+                  <div className="inputbox">
+                    Age: {this.getAgeText()}
+                  </div>
+                </div>
               </div>
-              <RaisedButton
-                label="no oedema"
-                style={{marginLeft: 12}}
-                primary={!this.state.oedema}
-                onClick={() => this.setOedemaStatus()}
-                />
-              <RaisedButton
-                label="oedema"
-                style={{margin: 0}}
-                secondary={this.state.oedema}
-                onClick={() => this.setOedemaStatus()}
-                />
             </div>
           </div>
 
@@ -344,18 +349,10 @@ export default class Calculator extends React.Component {
                   <input
                     type="number"
                     name="head"
-                    value={this.state.headCircumference}
+                    value={this.state.head}
                     step="0.01"
                     onChange={this.setHeadCircumference}
                     />
-                </div>
-
-                <div className="inputbox">
-                  BMI: {this.getBmi()}
-                </div>
-
-                <div className="inputbox">
-                  Age: {this.getAgeText()}
                 </div>
               </div>
 
@@ -397,6 +394,8 @@ export default class Calculator extends React.Component {
           </div>
         </div>
 
+        <Divider />
+
         <Results
           sex={this.state.sex}
           age={this.getAge()}
@@ -406,7 +405,7 @@ export default class Calculator extends React.Component {
           weight={this.state.weight}
           height={this.state.height}
 
-          headCircumference={this.state.headCircumference}
+          head={this.state.head}
           muac={this.state.muac}
           triceps={this.state.triceps}
           subscapular={this.state.subscapular}

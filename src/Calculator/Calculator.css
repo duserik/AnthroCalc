@@ -1,81 +1,82 @@
 .calculator {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .patient {
-    display: flex;
+  display: flex;
 }
 
 .patientText {
-    margin: 5px;
-    color: grey;
-    text-align: center;
+  margin: 5px;
+  color: grey;
+  text-align: center;
 }
 
 .patientInfo {
-    margin: 10px;
-    border: solid 1px grey;
-    padding: 3px;
-    flex: 1 1 0;
+  margin: 10px;
+  padding: 3px;
+  flex: 1 1 0;
 }
 
 .patientMeasurements {
-    margin: 10px;
-    border: solid 1px grey;
-    padding: 3px;
-    flex: 1 1 0;
+  margin: 10px;
+  padding: 3px;
+  flex: 1 1 0;
 }
 
 .datepickers {
-    display: flex;
+  display: flex;
 }
 
 .dateOfBirth {
-    margin: 5px;
+  margin: 5px;
 }
 
 .dateOfVisit {
-    margin: 5px;
-}
-
-.sex {
-    display: flex;
-    align-items: center;
-    text-align: left;
-    margin: 5px;
+  margin: 5px;
 }
 
 .text {
-    flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 
 .inputbox {
-    display: flex;
-    margin: 5px;
-    flex-direction: column;
-}
-
-.measurement {
-    display: flex;
-    align-items: center;
-    text-align: left;
-    margin: 5px;
-}
-
-.oedema {
-    display: flex;
-    align-items: center;
-    text-align: left;
-    margin: 5px;
+  display: flex;
+  margin: 5px;
+  flex-direction: column;
 }
 
 .splitter {
-    display: flex;
+  display: flex;
 }
 
 .right-side {
-    align-items: right;
-    text-align: right;
-    flex: 1 1 0;
+  align-items: right;
+  text-align: right;
+  flex: 1 1 0;
+}
+
+.optionbuttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.sex {
+  display: flex;
+  align-items: center;
+  margin: 5px;
+  margin-top: 20px;
+}
+
+.measurement {
+  display: flex;
+  align-items: center;
+  margin: 5px;
+}
+
+.oedema {
+  display: flex;
+  align-items: center;
+  margin: 5px;
 }

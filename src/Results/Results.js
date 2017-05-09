@@ -1,27 +1,55 @@
 import React from 'react';
 import LinearProgress from 'material-ui/LinearProgress';
-import {wfl_boys} from '../zscore_tables/wfl_boys';
-import {wfl_girls} from '../zscore_tables/wfl_girls';
-import {wfa_girls} from '../zscore_tables/wfa_girls';
-import {wfa_boys} from '../zscore_tables/wfa_boys';
-import {lhfa_girls} from '../zscore_tables/lhfa_girls';
-import {lhfa_boys} from '../zscore_tables/lhfa_boys';
-import {bfa_boys} from '../zscore_tables/bfa_boys';
-import {bfa_girls} from '../zscore_tables/bfa_girls';
-import {hcfa_boys} from '../zscore_tables/hcfa_boys';
-import {hcfa_girls} from '../zscore_tables/hcfa_girls';
-import {acfa_boys} from '../zscore_tables/acfa_boys';
-import {acfa_girls} from '../zscore_tables/acfa_girls';
-import {tsfa_boys} from '../zscore_tables/tsfa_boys';
-import {tsfa_girls} from '../zscore_tables/tsfa_girls';
-import {ssfa_boys} from '../zscore_tables/ssfa_boys';
-import {ssfa_girls} from '../zscore_tables/ssfa_girls';
+import RaisedButton from 'material-ui/RaisedButton';
+import ActionAndroid from 'material-ui/svg-icons/action/android';
+
+import {wfl_boys} from '../data/Centile_Tables/wfl_boys';
+import {wfl_girls} from '../data/Centile_Tables/wfl_girls';
+import {wfa_girls} from '../data/Centile_Tables/wfa_girls';
+import {wfa_boys} from '../data/Centile_Tables/wfa_boys';
+import {lhfa_girls} from '../data/Centile_Tables/lhfa_girls';
+import {lhfa_boys} from '../data/Centile_Tables/lhfa_boys';
+import {bfa_boys} from '../data/Centile_Tables/bfa_boys';
+import {bfa_girls} from '../data/Centile_Tables/bfa_girls';
+import {hcfa_boys} from '../data/Centile_Tables/hcfa_boys';
+import {hcfa_girls} from '../data/Centile_Tables/hcfa_girls';
+import {acfa_boys} from '../data/Centile_Tables/acfa_boys';
+import {acfa_girls} from '../data/Centile_Tables/acfa_girls';
+import {tsfa_boys} from '../data/Centile_Tables/tsfa_boys';
+import {tsfa_girls} from '../data/Centile_Tables/tsfa_girls';
+import {ssfa_boys} from '../data/Centile_Tables/ssfa_boys';
+import {ssfa_girls} from '../data/Centile_Tables/ssfa_girls';
+
+import {wfl_boys_sd} from '../data/SD_Tables/wfl_boys_sd';
+import {wfl_girls_sd} from '../data/SD_Tables/wfl_girls_sd';
+import {wfa_girls_sd} from '../data/SD_Tables/wfa_girls_sd';
+import {wfa_boys_sd} from '../data/SD_Tables/wfa_boys_sd';
+import {lhfa_girls_sd} from '../data/SD_Tables/lhfa_girls_sd';
+import {lhfa_boys_sd} from '../data/SD_Tables/lhfa_boys_sd';
+import {bfa_boys_sd} from '../data/SD_Tables/bfa_boys_sd';
+import {bfa_girls_sd} from '../data/SD_Tables/bfa_girls_sd';
+import {hcfa_boys_sd} from '../data/SD_Tables/hcfa_boys_sd';
+import {hcfa_girls_sd} from '../data/SD_Tables/hcfa_girls_sd';
+import {acfa_boys_sd} from '../data/SD_Tables/acfa_boys_sd';
+import {acfa_girls_sd} from '../data/SD_Tables/acfa_girls_sd';
+import {tsfa_boys_sd} from '../data/SD_Tables/tsfa_boys_sd';
+import {tsfa_girls_sd} from '../data/SD_Tables/tsfa_girls_sd';
+import {ssfa_boys_sd} from '../data/SD_Tables/ssfa_boys_sd';
+import {ssfa_girls_sd} from '../data/SD_Tables/ssfa_girls_sd';
+
+import Plot from '../Plot/Plot';
 
 import './Results.css';
 
 export default class Results extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      plotdata: {},
+      showplot: false,
+      currentplot: '',
+    }
 
     this.getWeightForLength = this.getWeightForLength.bind(this);
     this.getWeightForAge = this.getWeightForAge.bind(this);
@@ -34,6 +62,10 @@ export default class Results extends React.Component {
 
     this.getColor = this.getColor.bind(this);
     this.getResultLine = this.getResultLine.bind(this);
+
+    this.togglePlot = this.togglePlot.bind(this);
+
+    this.getWFLPlotdata = this.getWFLPlotdata.bind(this);
   }
 
   getWeightForLength() {
@@ -99,6 +131,42 @@ export default class Results extends React.Component {
     }
   }
 
+  getWFLPlotdata() {
+    let height = this.props.height;
+    // If sex, weight or height are undefined, return -
+    if (this.props.sex === undefined || this.props.weight === undefined || height === undefined) {
+      return '-';
+    }
+
+    // If patient has oedema, return -
+    if (this.props.oedema) {
+      return '-';
+    }
+
+    // Adjust height if patient was measured standing
+    if (!this.props.recumbent) {
+      height += 0.7;
+    }
+
+    // If the selected height is outside the specifications provided by WHO, return -
+    if (height < 45 || height > 110) {
+      return '-';
+    }
+
+    // Collect the two LMS values for either male or female
+    let table = wfl_boys_sd;
+    if (this.props.sex === 'female') {
+      table = wfl_girls_sd;
+    }
+
+    return {
+      table: table,
+      measurement1: height,
+      measurement2: this.props.weight,
+      title: 'Weight-for-length',
+    }
+  }
+
   getWeightForAge() {
     let sex = this.props.sex;
     let weight = this.props.weight;
@@ -110,7 +178,7 @@ export default class Results extends React.Component {
     }
 
     // Get LMS values for the given parameters
-    let LMS = this.getLMS(sex, weight, age, wfa_boys, wfa_girls);
+    let LMS = this.getLMS(sex, age, wfa_boys, wfa_girls);
 
     // If getLMS() returned '-', data could not be retrieved
     if (LMS === '-') {
@@ -137,7 +205,7 @@ export default class Results extends React.Component {
     }
 
     // Get LMS values for the given parameters
-    let LMS = this.getLMS(sex, height, age, lhfa_boys, lhfa_girls);
+    let LMS = this.getLMS(sex, age, lhfa_boys, lhfa_girls);
 
     // If getLMS() returned '-', data could not be retrieved
     if (LMS === '-') {
@@ -164,7 +232,7 @@ export default class Results extends React.Component {
     }
 
     // Get LMS values for the given parameters
-    let LMS = this.getLMS(sex, bmi, age, bfa_boys, bfa_girls);
+    let LMS = this.getLMS(sex, age, bfa_boys, bfa_girls);
 
     // If getLMS() returned '-', data could not be retrieved
     if (LMS === '-') {
@@ -182,11 +250,11 @@ export default class Results extends React.Component {
 
   getHCForAge() {
     let sex = this.props.sex;
-    let hc = this.props.headCircumference;
+    let hc = this.props.head;
     let age = this.props.age;
 
     // Get LMS values for the given parameters
-    let LMS = this.getLMS(sex, hc, age, hcfa_boys, hcfa_girls);
+    let LMS = this.getLMS(sex, age, hcfa_boys, hcfa_girls);
 
     // If getLMS() returned '-', data could not be retrieved
     if (LMS === '-') {
@@ -213,7 +281,7 @@ export default class Results extends React.Component {
     }
 
     // Get LMS values for the given parameters
-    let LMS = this.getLMS(sex, muac, age, acfa_boys, acfa_girls);
+    let LMS = this.getLMS(sex, age, acfa_boys, acfa_girls);
 
     // If getLMS() returned '-', data could not be retrieved
     if (LMS === '-') {
@@ -240,7 +308,7 @@ export default class Results extends React.Component {
     }
 
     // Get LMS values for the given parameters
-    let LMS = this.getLMS(sex, ts, age, tsfa_boys, tsfa_girls);
+    let LMS = this.getLMS(sex, age, tsfa_boys, tsfa_girls);
 
     // If getLMS() returned '-', data could not be retrieved
     if (LMS === '-') {
@@ -267,7 +335,7 @@ export default class Results extends React.Component {
     }
 
     // Get LMS values for the given parameters
-    let LMS = this.getLMS(sex, ss, age, ssfa_boys, ssfa_girls);
+    let LMS = this.getLMS(sex, age, ssfa_boys, ssfa_girls);
 
     // If getLMS() returned '-', data could not be retrieved
     if (LMS === '-') {
@@ -316,15 +384,14 @@ export default class Results extends React.Component {
   /**
   * Collects LMS values from the chosen zscore-tables.
   * @param sex
-  * @param y
   * @param age
   * @param dataset_boys
   * @param dataset_girls
   * @returns {*}
   */
-  getLMS(sex, y, age, dataset_boys, dataset_girls) {
+  getLMS(sex, age, dataset_boys, dataset_girls) {
     // If sex, y or age are undefined, return -
-    if (sex === undefined || y === undefined || age === '-') {
+    if (sex === undefined || age === '-') {
       return '-';
     }
 
@@ -401,11 +468,38 @@ export default class Results extends React.Component {
     return 'green';
   }
 
-  getResultLine(label, value) {
+  togglePlot(keyw) {
+    if (keyw === this.state.currentplot) {
+      this.setState({
+        showplot: !this.state.showplot,
+        currentplot: '',
+      });
+      return;
+    }
+
+    // get chart data
+    // get Measurements
+    // needs:
+    //  gender, weight and length
+    //  chart based on gender
+    //
+    let plotdata = {};
+    if (keyw === 'wfl') {
+      plotdata = this.getWFLPlotdata();
+    }
+
+    this.setState({
+      showplot: !this.state.showplot,
+      currentplot: keyw,
+      plotdata: plotdata,
+    });
+  }
+
+  getResultLine(label, value, keyw) {
     return (
       <div className="resultline">
         <div className="rlabel">
-          {label}
+          <p>{label}</p>
         </div>
         <div className="rbar">
           <LinearProgress
@@ -413,31 +507,66 @@ export default class Results extends React.Component {
             value={value.centile}
             color={this.getColor(value.value)}
             style={{
-              height: '10px',
+              height: '100%',
             }} />
         </div>
         <div className="rzscore">
-          {Math.round(value.value * 100) / 100}
+          <p>{Math.round(value.value * 100) / 100}</p>
+        </div>
+        <div className="rchartbutton">
+          <RaisedButton
+            icon={<ActionAndroid />}
+            onClick={() => this.togglePlot(keyw)}
+            style={{
+              height: '100%',
+              width: '100%',
+              minWidth: '20px',
+            }} />
         </div>
       </div>
     );
   }
 
+  /* CHARTNOTES
+
+  Need: Plot or Graph module
+        wfl_x_z_exp.txt for each indicator
+        Grid behind lines
+
+  Collect +3/+2/+1/Median/-1/-2/-3 for each height in txt file
+  Chart out each line
+    1 line for +3 SD, 1 line for +2 SD, etc
+    Color them accordingly, (black, red, yellow, green, yellow, red, black)
+  Plot position of patient in chart
+
+  Grey out chart button if value is off charts or NaN
+
+  Possible modules:
+    Highcharts - http://jsfiddle.net/sc5Gv/128/
+  */
+
   render() {
     return (
-      <div className="results">
-        <div className="resultsLeft">
-          {this.getResultLine('Weight-for-length', this.getWeightForLength())}
-          {this.getResultLine('Weight-for-age', this.getWeightForAge())}
-          {this.getResultLine('Length-for-age', this.getLengthForAge())}
-          {this.getResultLine('BMI-for-age', this.getBMIForAge())}
-        </div>
+      <div>
+        <Plot
+          plotdata={this.state.plotdata}
+          showplot={this.state.showplot}
+          />
 
-        <div className="resultsRight">
-          {this.getResultLine('HC-for-age', this.getHCForAge())}
-          {this.getResultLine('MUAC-for-age', this.getMUACForAge())}
-          {this.getResultLine('TSF-for-age', this.getTSForAge())}
-          {this.getResultLine('SSF-for-age', this.getSSForAge())}
+        <div className="results">
+          <div className="resultsLeft">
+            {this.getResultLine('Weight-for-length', this.getWeightForLength(), 'wfl')}
+            {this.getResultLine('Weight-for-age', this.getWeightForAge(), 'wfa')}
+            {this.getResultLine('Length-for-age', this.getLengthForAge(), 'lfa')}
+            {this.getResultLine('BMI-for-age', this.getBMIForAge(), 'bfa')}
+          </div>
+
+          <div className="resultsRight">
+            {this.getResultLine('HC-for-age', this.getHCForAge(), 'hcfa')}
+            {this.getResultLine('MUAC-for-age', this.getMUACForAge(), 'acfa')}
+            {this.getResultLine('TSF-for-age', this.getTSForAge(), 'tsfa')}
+            {this.getResultLine('SSF-for-age', this.getSSForAge(), 'ssfa')}
+          </div>
         </div>
       </div>
     );
