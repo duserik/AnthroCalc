@@ -89,8 +89,16 @@ export default class Calculator extends React.Component {
   }
 
   setRecumbentStatus() {
+    let height = this.state.height;
+    if (this.state.recumbent) {
+      height += 0.7;
+    } else {
+      height -= 0.7;
+    }
+
     this.setState({
       recumbent: !this.state.recumbent,
+      height: height,
     });
   }
 
@@ -161,17 +169,14 @@ export default class Calculator extends React.Component {
   }
 
   getBmi() {
-    if (this.state.weight === undefined || this.state.height === undefined || this.state.oedema) {
+    let weight = this.state.weight;
+    let height = this.state.height;
+
+    if (weight === undefined || height === undefined || this.state.oedema) {
       return '-';
     }
 
-    // Add 0.7 cm if patient was measured while standing (if under x months)
-    let height = this.state.height;
-    if (!this.state.recumbent) {
-      height = this.state.height + 0.7;
-    }
-
-    return Math.round(this.state.weight / Math.pow(height / 100, 2) * 100) / 100;
+    return Math.round(weight / Math.pow(height / 100, 2) * 100) / 100;
   }
 
   getAge() {
@@ -196,10 +201,6 @@ export default class Calculator extends React.Component {
     }
 
     return age + ' months';
-  }
-
-  formatDate(date) {
-    return new Intl.DateTimeFormat().format(date);
   }
 
   render() {
@@ -323,7 +324,7 @@ export default class Calculator extends React.Component {
             <div className="splitter">
               <div className="leftSide">
                 <div className="inputbox">
-                  Weight (kg): STYLE THIS INPUT
+                  Weight (kg):
                   <input
                     type="number"
                     name="height"
@@ -334,7 +335,7 @@ export default class Calculator extends React.Component {
                 </div>
 
                 <div className="inputbox">
-                  Length/Height (cm): STYLE THIS INPUT
+                  Length/Height (cm):
                   <input
                     type="number"
                     name="height"
@@ -402,9 +403,9 @@ export default class Calculator extends React.Component {
           bmi={this.getBmi()}
           recumbent={this.state.recumbent}
           oedema={this.state.oedema}
+
           weight={this.state.weight}
           height={this.state.height}
-
           head={this.state.head}
           muac={this.state.muac}
           triceps={this.state.triceps}

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Calculator from './Calculator/Calculator';
+import Calculator from './Components/Calculator/Calculator';
 import './index.css';
 
 ReactDOM.render(

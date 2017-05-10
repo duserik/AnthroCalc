@@ -16,6 +16,7 @@ export default class Plot extends React.Component {
       name: label,
       data: data,
       color: color,
+      animation: false,
       enableMouseTracking: false,
       marker: {
         radius: 0
@@ -47,10 +48,6 @@ export default class Plot extends React.Component {
     // add label to end of each line
 
     // reduce number of data points by factor of 10 or more
-
-    if (!this.props.showplot) {
-      return null;
-    }
 
     let table = this.props.plotdata.table;
 
@@ -148,9 +145,7 @@ export default class Plot extends React.Component {
 
   return (
     <div>
-      {this.props.showplot &&
-        <ReactHighcharts config={config} />
-      }
+      <ReactHighcharts config={config} />
     </div>
   );
 }

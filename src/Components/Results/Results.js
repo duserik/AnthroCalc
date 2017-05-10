@@ -3,39 +3,39 @@ import LinearProgress from 'material-ui/LinearProgress';
 import RaisedButton from 'material-ui/RaisedButton';
 import ActionAndroid from 'material-ui/svg-icons/action/android';
 
-import {wfl_boys} from '../data/Centile_Tables/wfl_boys';
-import {wfl_girls} from '../data/Centile_Tables/wfl_girls';
-import {wfa_girls} from '../data/Centile_Tables/wfa_girls';
-import {wfa_boys} from '../data/Centile_Tables/wfa_boys';
-import {lhfa_girls} from '../data/Centile_Tables/lhfa_girls';
-import {lhfa_boys} from '../data/Centile_Tables/lhfa_boys';
-import {bfa_boys} from '../data/Centile_Tables/bfa_boys';
-import {bfa_girls} from '../data/Centile_Tables/bfa_girls';
-import {hcfa_boys} from '../data/Centile_Tables/hcfa_boys';
-import {hcfa_girls} from '../data/Centile_Tables/hcfa_girls';
-import {acfa_boys} from '../data/Centile_Tables/acfa_boys';
-import {acfa_girls} from '../data/Centile_Tables/acfa_girls';
-import {tsfa_boys} from '../data/Centile_Tables/tsfa_boys';
-import {tsfa_girls} from '../data/Centile_Tables/tsfa_girls';
-import {ssfa_boys} from '../data/Centile_Tables/ssfa_boys';
-import {ssfa_girls} from '../data/Centile_Tables/ssfa_girls';
+import {wfl_boys} from '../../data/Centile_Tables/wfl_boys';
+import {wfl_girls} from '../../data/Centile_Tables/wfl_girls';
+import {wfa_girls} from '../../data/Centile_Tables/wfa_girls';
+import {wfa_boys} from '../../data/Centile_Tables/wfa_boys';
+import {lhfa_girls} from '../../data/Centile_Tables/lhfa_girls';
+import {lhfa_boys} from '../../data/Centile_Tables/lhfa_boys';
+import {bfa_boys} from '../../data/Centile_Tables/bfa_boys';
+import {bfa_girls} from '../../data/Centile_Tables/bfa_girls';
+import {hcfa_boys} from '../../data/Centile_Tables/hcfa_boys';
+import {hcfa_girls} from '../../data/Centile_Tables/hcfa_girls';
+import {acfa_boys} from '../../data/Centile_Tables/acfa_boys';
+import {acfa_girls} from '../../data/Centile_Tables/acfa_girls';
+import {tsfa_boys} from '../../data/Centile_Tables/tsfa_boys';
+import {tsfa_girls} from '../../data/Centile_Tables/tsfa_girls';
+import {ssfa_boys} from '../../data/Centile_Tables/ssfa_boys';
+import {ssfa_girls} from '../../data/Centile_Tables/ssfa_girls';
 
-import {wfl_boys_sd} from '../data/SD_Tables/wfl_boys_sd';
-import {wfl_girls_sd} from '../data/SD_Tables/wfl_girls_sd';
-import {wfa_girls_sd} from '../data/SD_Tables/wfa_girls_sd';
-import {wfa_boys_sd} from '../data/SD_Tables/wfa_boys_sd';
-import {lhfa_girls_sd} from '../data/SD_Tables/lhfa_girls_sd';
-import {lhfa_boys_sd} from '../data/SD_Tables/lhfa_boys_sd';
-import {bfa_boys_sd} from '../data/SD_Tables/bfa_boys_sd';
-import {bfa_girls_sd} from '../data/SD_Tables/bfa_girls_sd';
-import {hcfa_boys_sd} from '../data/SD_Tables/hcfa_boys_sd';
-import {hcfa_girls_sd} from '../data/SD_Tables/hcfa_girls_sd';
-import {acfa_boys_sd} from '../data/SD_Tables/acfa_boys_sd';
-import {acfa_girls_sd} from '../data/SD_Tables/acfa_girls_sd';
-import {tsfa_boys_sd} from '../data/SD_Tables/tsfa_boys_sd';
-import {tsfa_girls_sd} from '../data/SD_Tables/tsfa_girls_sd';
-import {ssfa_boys_sd} from '../data/SD_Tables/ssfa_boys_sd';
-import {ssfa_girls_sd} from '../data/SD_Tables/ssfa_girls_sd';
+import {wfl_boys_sd} from '../../data/SD_Tables/wfl_boys_sd';
+import {wfl_girls_sd} from '../../data/SD_Tables/wfl_girls_sd';
+import {wfa_girls_sd} from '../../data/SD_Tables/wfa_girls_sd';
+import {wfa_boys_sd} from '../../data/SD_Tables/wfa_boys_sd';
+import {lhfa_girls_sd} from '../../data/SD_Tables/lhfa_girls_sd';
+import {lhfa_boys_sd} from '../../data/SD_Tables/lhfa_boys_sd';
+import {bfa_boys_sd} from '../../data/SD_Tables/bfa_boys_sd';
+import {bfa_girls_sd} from '../../data/SD_Tables/bfa_girls_sd';
+import {hcfa_boys_sd} from '../../data/SD_Tables/hcfa_boys_sd';
+import {hcfa_girls_sd} from '../../data/SD_Tables/hcfa_girls_sd';
+import {acfa_boys_sd} from '../../data/SD_Tables/acfa_boys_sd';
+import {acfa_girls_sd} from '../../data/SD_Tables/acfa_girls_sd';
+import {tsfa_boys_sd} from '../../data/SD_Tables/tsfa_boys_sd';
+import {tsfa_girls_sd} from '../../data/SD_Tables/tsfa_girls_sd';
+import {ssfa_boys_sd} from '../../data/SD_Tables/ssfa_boys_sd';
+import {ssfa_girls_sd} from '../../data/SD_Tables/ssfa_girls_sd';
 
 import Plot from '../Plot/Plot';
 
@@ -65,7 +65,8 @@ export default class Results extends React.Component {
 
     this.togglePlot = this.togglePlot.bind(this);
 
-    this.getWFLPlotdata = this.getWFLPlotdata.bind(this);
+    this.getPlotdata = this.getPlotdata.bind(this);
+    this.getPlot = this.getPlot.bind(this);
   }
 
   getWeightForLength() {
@@ -86,11 +87,6 @@ export default class Results extends React.Component {
     // If the selected height is outside the specifications provided by WHO, return -
     if (height < 45 || height > 110) {
       return '-';
-    }
-
-    // Adjust height if patient was measured standing
-    if (!this.props.recumbent) {
-      height += 0.7;
     }
 
     // Get the two closest applicable LMS value sets
@@ -131,44 +127,6 @@ export default class Results extends React.Component {
     }
   }
 
-  getWFLPlotdata() {
-    let height = this.props.height;
-    // If sex, weight or height are undefined, return -
-    if (this.props.sex === undefined || this.props.weight === undefined || height === undefined) {
-      return '-';
-    }
-
-    // If patient has oedema, return -
-    if (this.props.oedema) {
-      return '-';
-    }
-
-    // Adjust height if patient was measured standing
-    if (!this.props.recumbent) {
-      height += 0.7;
-    }
-
-    // If the selected height is outside the specifications provided by WHO, return -
-    if (height < 45 || height > 110) {
-      return '-';
-    }
-
-    // Collect the two LMS values for either male or female
-    let table = wfl_boys_sd;
-    if (this.props.sex === 'female') {
-      table = wfl_girls_sd;
-    }
-
-    return {
-      table: table,
-      measurement1: height,
-      measurement2: this.props.weight,
-      xtitle: 'Height (cm)',
-      ytitle: 'Weight (kg)',
-      title: 'Weight-for-length',
-    }
-  }
-
   getWeightForAge() {
     let sex = this.props.sex;
     let weight = this.props.weight;
@@ -200,11 +158,6 @@ export default class Results extends React.Component {
     let sex = this.props.sex;
     let height = this.props.height;
     let age = this.props.age;
-
-    // Adjust height if patient was measured standing
-    if (!this.props.recumbent) {
-      height += 0.7;
-    }
 
     // Get LMS values for the given parameters
     let LMS = this.getLMS(sex, age, lhfa_boys, lhfa_girls);
@@ -471,31 +424,88 @@ export default class Results extends React.Component {
   }
 
   togglePlot(keyw) {
-    if (keyw === this.state.currentplot) {
+    // If user presses same plot button twice
+    if (this.state.showplot && keyw === this.state.currentplot) {
       this.setState({
-        showplot: !this.state.showplot,
+        showplot: false,
         currentplot: '',
-        plotdata: {},
       });
       return;
     }
 
-    // get chart data
-    // get Measurements
-    // needs:
-    //  gender, weight and length
-    //  chart based on gender
-    //
+    this.setState({
+      showplot: true,
+      currentplot: keyw,
+    });
+  }
+
+  getPlot() {
     let plotdata = {};
-    if (keyw === 'wfl') {
-      plotdata = this.getWFLPlotdata();
+    let currentplot = this.state.currentplot;
+
+    if (this.props.oedema) {
+      if (currentplot === 'wfl' || currentplot === 'wfa' || currentplot === 'mfa') {
+        return plotdata;
+      }
     }
 
-    this.setState({
-      showplot: !this.state.showplot,
-      currentplot: keyw,
-      plotdata: plotdata,
-    });
+    if (this.props.age === '-') {
+      if (currentplot !== 'wfl') {
+        return plotdata;
+      }
+    }
+
+    if (this.props.age < 91) {
+      if (currentplot === 'acfa' || currentplot === 'tsfa' || currentplot === 'ssfa') {
+        return plotdata;
+      }
+    }
+
+    if (this.state.currentplot === 'wfl') {
+      plotdata = this.getPlotdata(wfl_boys_sd, wfl_girls_sd, this.props.height, this.props.weight, 'Height (cm)', 'Weight (kg)', 'Weight-for-length');
+    }
+
+    if (this.state.currentplot === 'wfa') {
+      plotdata = this.getPlotdata(wfa_boys_sd, wfa_girls_sd, this.props.age, this.props.weight, 'Age (days)', 'Weight (kg)', 'Weight-for-age');
+    }
+
+    if (this.state.currentplot === 'lfa') {
+      plotdata = this.getPlotdata(lhfa_boys_sd, lhfa_girls_sd, this.props.age, this.props.height, 'Age (days)', 'Height (cm)', 'Length-for-age');
+    }
+
+    if (this.state.currentplot === 'bfa') {
+      plotdata = this.getPlotdata(bfa_boys_sd, bfa_girls_sd, this.props.age, this.props.bmi, 'Age (days)', 'BMI', 'BMI-for-age');
+    }
+
+    if (this.state.currentplot === 'hcfa') {
+      plotdata = this.getPlotdata(hcfa_boys_sd, hcfa_girls_sd, this.props.age, this.props.head, 'Age (days)', 'Head Circumference (cm)', 'HC-for-age');
+    }
+
+    if (this.state.currentplot === 'acfa') {
+      plotdata = this.getPlotdata(acfa_boys_sd, acfa_girls_sd, this.props.age, this.props.muac, 'Age (days)', 'MUAC', 'MUAC-for-age');
+    }
+
+    if (this.state.currentplot === 'tsfa') {
+      plotdata = this.getPlotdata(tsfa_boys_sd, tsfa_girls_sd, this.props.age, this.props.triceps, 'Age (days)', 'BMI', 'TSF-for-age');
+    }
+
+    if (this.state.currentplot === 'ssfa') {
+      plotdata = this.getPlotdata(ssfa_boys_sd, ssfa_girls_sd, this.props.age, this.props.subscapular, 'Age (days)', 'Subscapular Skinfold (cm)', 'SSF-for-age');
+    }
+
+    return plotdata;
+  }
+
+  getPlotdata(table1, table2, measurement1, measurement2, xtitle, ytitle, title) {
+    let table = this.props.sex === 'male' ? table1 : table2;
+    return {
+      table: table,
+      measurement1: measurement1,
+      measurement2: measurement2,
+      xtitle: xtitle,
+      ytitle: ytitle,
+      title: title,
+    }
   }
 
   getResultLine(label, value, keyw) {
@@ -533,11 +543,6 @@ export default class Results extends React.Component {
   render() {
     return (
       <div>
-        <Plot
-          plotdata={this.state.plotdata}
-          showplot={this.state.showplot}
-          />
-
         <div className="results">
           <div className="resultsLeft">
             {this.getResultLine('Weight-for-length', this.getWeightForLength(), 'wfl')}
@@ -553,6 +558,13 @@ export default class Results extends React.Component {
             {this.getResultLine('SSF-for-age', this.getSSForAge(), 'ssfa')}
           </div>
         </div>
+
+        {this.state.showplot &&
+        <Plot
+          plotdata={this.getPlot()}
+          showplot={this.state.showplot}
+          />
+        }
       </div>
     );
   }
