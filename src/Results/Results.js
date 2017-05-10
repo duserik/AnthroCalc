@@ -163,6 +163,8 @@ export default class Results extends React.Component {
       table: table,
       measurement1: height,
       measurement2: this.props.weight,
+      xtitle: 'Height (cm)',
+      ytitle: 'Weight (kg)',
       title: 'Weight-for-length',
     }
   }
@@ -473,6 +475,7 @@ export default class Results extends React.Component {
       this.setState({
         showplot: !this.state.showplot,
         currentplot: '',
+        plotdata: {},
       });
       return;
     }
@@ -526,24 +529,6 @@ export default class Results extends React.Component {
       </div>
     );
   }
-
-  /* CHARTNOTES
-
-  Need: Plot or Graph module
-        wfl_x_z_exp.txt for each indicator
-        Grid behind lines
-
-  Collect +3/+2/+1/Median/-1/-2/-3 for each height in txt file
-  Chart out each line
-    1 line for +3 SD, 1 line for +2 SD, etc
-    Color them accordingly, (black, red, yellow, green, yellow, red, black)
-  Plot position of patient in chart
-
-  Grey out chart button if value is off charts or NaN
-
-  Possible modules:
-    Highcharts - http://jsfiddle.net/sc5Gv/128/
-  */
 
   render() {
     return (
