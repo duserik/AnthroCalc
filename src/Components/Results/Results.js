@@ -457,42 +457,48 @@ export default class Results extends React.Component {
       }
     }
 
+    if (this.props.unknownBirthDate) {
+      if (currentplot !== 'wfl') {
+        return plotdata;
+      }
+    }
+
     if (this.state.currentplot === 'wfl') {
-      plotdata = this.getPlotdata(wfl_boys_sd, wfl_girls_sd, this.props.height, this.props.weight, 'Height (cm)', 'Weight (kg)', 'Weight-for-length');
+      plotdata = this.getPlotdata(false, wfl_boys_sd, wfl_girls_sd, this.props.height, this.props.weight, 'Height (cm)', 'Weight (kg)', 'Weight-for-length');
     }
 
     if (this.state.currentplot === 'wfa') {
-      plotdata = this.getPlotdata(wfa_boys_sd, wfa_girls_sd, this.props.age, this.props.weight, 'Age (days)', 'Weight (kg)', 'Weight-for-age');
+      plotdata = this.getPlotdata(true, wfa_boys_sd, wfa_girls_sd, this.props.age, this.props.weight, 'Age (months)', 'Weight (kg)', 'Weight-for-age');
     }
 
     if (this.state.currentplot === 'lfa') {
-      plotdata = this.getPlotdata(lhfa_boys_sd, lhfa_girls_sd, this.props.age, this.props.height, 'Age (days)', 'Height (cm)', 'Length-for-age');
+      plotdata = this.getPlotdata(true, lhfa_boys_sd, lhfa_girls_sd, this.props.age, this.props.height, 'Age (months)', 'Height (cm)', 'Length-for-age');
     }
 
     if (this.state.currentplot === 'bfa') {
-      plotdata = this.getPlotdata(bfa_boys_sd, bfa_girls_sd, this.props.age, this.props.bmi, 'Age (days)', 'BMI', 'BMI-for-age');
+      plotdata = this.getPlotdata(true, bfa_boys_sd, bfa_girls_sd, this.props.age, this.props.bmi, 'Age (months)', 'BMI', 'BMI-for-age');
     }
 
     if (this.state.currentplot === 'hcfa') {
-      plotdata = this.getPlotdata(hcfa_boys_sd, hcfa_girls_sd, this.props.age, this.props.head, 'Age (days)', 'Head Circumference (cm)', 'HC-for-age');
+      plotdata = this.getPlotdata(true, hcfa_boys_sd, hcfa_girls_sd, this.props.age, this.props.head, 'Age (months)', 'Head Circumference (cm)', 'HC-for-age');
     }
 
     if (this.state.currentplot === 'acfa') {
-      plotdata = this.getPlotdata(acfa_boys_sd, acfa_girls_sd, this.props.age, this.props.muac, 'Age (days)', 'MUAC', 'MUAC-for-age');
+      plotdata = this.getPlotdata(true, acfa_boys_sd, acfa_girls_sd, this.props.age, this.props.muac, 'Age (months)', 'MUAC', 'MUAC-for-age');
     }
 
     if (this.state.currentplot === 'tsfa') {
-      plotdata = this.getPlotdata(tsfa_boys_sd, tsfa_girls_sd, this.props.age, this.props.triceps, 'Age (days)', 'BMI', 'TSF-for-age');
+      plotdata = this.getPlotdata(true, tsfa_boys_sd, tsfa_girls_sd, this.props.age, this.props.triceps, 'Age (months)', 'BMI', 'TSF-for-age');
     }
 
     if (this.state.currentplot === 'ssfa') {
-      plotdata = this.getPlotdata(ssfa_boys_sd, ssfa_girls_sd, this.props.age, this.props.subscapular, 'Age (days)', 'Subscapular Skinfold (cm)', 'SSF-for-age');
+      plotdata = this.getPlotdata(true, ssfa_boys_sd, ssfa_girls_sd, this.props.age, this.props.subscapular, 'Age (months)', 'Subscapular Skinfold (cm)', 'SSF-for-age');
     }
 
     return plotdata;
   }
 
-  getPlotdata(table1, table2, measurement1, measurement2, xtitle, ytitle, title) {
+  getPlotdata(agebased,table1, table2, measurement1, measurement2, xtitle, ytitle, title) {
     let table = this.props.sex === 'male' ? table1 : table2;
     return {
       table: table,
@@ -501,6 +507,7 @@ export default class Results extends React.Component {
       xtitle: xtitle,
       ytitle: ytitle,
       title: title,
+      agebased: agebased,
     }
   }
 

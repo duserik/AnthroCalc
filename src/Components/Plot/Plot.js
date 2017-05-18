@@ -11,10 +11,12 @@ export default class Plot extends React.Component {
     this.getPlotlines = this.getPlotlines.bind(this);
   }
 
-  getSeries(label, data, color) {
+  getSeries(type, label, data, color) {
     return {
+      type: type,
       name: label,
       data: data,
+      lineWidth: 1,
       color: color,
       animation: false,
       enableMouseTracking: false,
@@ -43,10 +45,16 @@ export default class Plot extends React.Component {
   }
 
   render() {
-    // add default zoom level around patient
-
     let table = this.props.plotdata.table;
 
+    /*
+    Collects area ranges for each standard deviation set.
+    Skips over every 10 values to reduce draw time.
+    Example:
+      SD4 to SD3 covers the area between the values of SD4 and SD3
+      SD1 to nSD1 covers the area between the values of SD1 and SD1neg
+      etc
+    */
     let SD4_SD3 = [];
     let SD3_SD2 = [];
     let SD2_SD1 = [];
@@ -54,6 +62,7 @@ export default class Plot extends React.Component {
     let nSD1_nSD2 = [];
     let nSD2_nSD3 = [];
     let nSD3_nSD4 = [];
+    let SD0 = [];
     for (let key = 0; key < Object.keys(table).length; key += 10) {
       let num = Object.keys(table)[key];
       let obj = table[num];
@@ -64,7 +73,11 @@ export default class Plot extends React.Component {
       nSD1_nSD2.push([Number(num), obj.SD1neg, obj.SD2neg]);
       nSD2_nSD3.push([Number(num), obj.SD2neg, obj.SD3neg]);
       nSD3_nSD4.push([Number(num), obj.SD3neg, obj.SD4neg]);
+      SD0.push([Number(num), obj.SD0]);
     }
+
+    // if chart is based on age, divide days by 30.25 to get months
+    let formatdivider = this.props.plotdata.agebased ? 30.25 : 1;
 
     let config = {
       title: {
@@ -74,7 +87,6 @@ export default class Plot extends React.Component {
         x: 90,
       },
       chart: {
-        type: 'arearange',
         zoomType: 'xy',
         backgroundColor: '#ededed',
       },
@@ -92,7 +104,14 @@ export default class Plot extends React.Component {
       },
       xAxis: {
         maxPadding: 0.04,
-        tickInterval: 1,
+        gridLineWidth: 1,
+        tickInterval: formatdivider,
+        labels:
+        {
+          formatter: function() {
+            return Math.round(this.value / formatdivider);
+          }
+        },
         title:
         {
           text: this.props.plotdata.xtitle,
@@ -129,13 +148,14 @@ export default class Plot extends React.Component {
       ]
     },
     series: [
-      this.getSeries('+3 SD', SD4_SD3, 'black'),
-      this.getSeries('+2 SD', SD3_SD2, 'red'),
-      this.getSeries('+1 SD', SD2_SD1, 'yellow'),
-      this.getSeries('Median', SD1_nSD1, 'green'),
-      this.getSeries('-1 SD', nSD1_nSD2, 'yellow'),
-      this.getSeries('-2 SD', nSD2_nSD3, 'red'),
-      this.getSeries('-3 SD', nSD3_nSD4, 'black'),
+      this.getSeries('arearange', '+3 SD', SD4_SD3, 'black'),
+      this.getSeries('arearange', '+2 SD', SD3_SD2, 'red'),
+      this.getSeries('arearange', '+1 SD', SD2_SD1, 'yellow'),
+      this.getSeries('arearange', '+1 SD', SD1_nSD1, 'green'),
+      this.getSeries('arearange', '-1 SD', nSD1_nSD2, 'yellow'),
+      this.getSeries('arearange', '-2 SD', nSD2_nSD3, 'red'),
+      this.getSeries('arearange', '-3 SD', nSD3_nSD4, 'black'),
+      this.getSeries('line', 'Median', SD0, 'black'),
     ]
   };
 

@@ -2,6 +2,7 @@ import React from 'react';
 import Results from '../Results/Results';
 import DatePicker from 'material-ui/DatePicker';
 import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
 
 import './Calculator.css';
@@ -122,63 +123,39 @@ export default class Calculator extends React.Component {
     });
   }
 
-  setWeight(event) {
-    // to-do: check if input actually is number
-    //        limit max number of decimals to 2
-    let weight = parseFloat(event.target.value);
-    weight = Math.round(weight * 100) / 100;
+  setWeight(event, value) {
     this.setState({
-      weight: weight,
+      weight: value,
     });
   }
 
-  setHeight(event) {
-    // to-do: check if input actually is number
-    //        limit max number of decimals to 2
-    let height = parseFloat(event.target.value);
-    height = Math.round(height * 100) / 100;
+  setHeight(event, value) {
     this.setState({
-      height: height,
+      height: value,
     });
   }
 
-  setHeadCircumference(event) {
-    // to-do: check if input actually is number
-    //        limit max number of decimals to 2
-    let headCircumference = parseFloat(event.target.value);
-    headCircumference = Math.round(headCircumference * 100) / 100;
+  setHeadCircumference(event, value) {
     this.setState({
-      head: headCircumference,
+      head: value,
     });
   }
 
-  setMUAC(event) {
-    // to-do: check if input actually is number
-    //        limit max number of decimals to 2
-    let muac = parseFloat(event.target.value);
-    muac = Math.round(muac * 100) / 100;
+  setMUAC(event, value) {
     this.setState({
-      muac: muac,
+      muac: value,
     });
   }
 
-  setTriceps(event) {
-    // to-do: check if input actually is number
-    //        limit max number of decimals to 2
-    let triceps = parseFloat(event.target.value);
-    triceps = Math.round(triceps * 100) / 100;
+  setTriceps(event, value) {
     this.setState({
-      triceps: triceps,
+      triceps: value,
     });
   }
 
-  setSubscapular(event) {
-    // to-do: check if input actually is number
-    //        limit max number of decimals to 2
-    let subscapular = parseFloat(event.target.value);
-    subscapular = Math.round(subscapular * 100) / 100;
+  setSubscapular(event, value) {
     this.setState({
-      subscapular: subscapular,
+      subscapular: value,
     });
   }
 
@@ -339,70 +316,70 @@ export default class Calculator extends React.Component {
               <div className="leftSide">
                 <div className="inputbox">
                   Weight (kg):
-                  <input
+                  <TextField
+                    id="weightfield"
                     type="number"
-                    name="height"
+                    step="0.1"
                     value={this.state.weight}
-                    step="0.01"
                     onChange={this.setWeight}
-                    />
+                  />
                 </div>
 
                 <div className="inputbox">
                   Length/Height (cm):
-                  <input
+                  <TextField
+                    id="heightfield"
                     type="number"
-                    name="height"
+                    step="0.1"
                     value={this.state.height}
-                    step="0.01"
                     onChange={this.setHeight}
-                    />
+                  />
                 </div>
 
                 <div className="inputbox">
                   Head circumference (cm):
-                  <input
+                  <TextField
+                    id="headfield"
                     type="number"
-                    name="head"
+                    step="0.1"
                     value={this.state.head}
-                    step="0.01"
                     onChange={this.setHeadCircumference}
-                    />
+                  />
                 </div>
               </div>
 
               <div className="rightSide">
                 <div className="inputbox">
                   MUAC (cm):
-                  <input
+                  <TextField
+                    id="muacfield"
                     type="number"
-                    name="muac"
+                    step="0.1"
                     value={this.state.muac}
-                    step="0.01"
                     onChange={this.setMUAC}
-                    />
+                  />
                 </div>
 
                 <div className="inputbox">
                   Triceps skinfold (mm):
-                  <input
+                  <TextField
+                    id="tricepsfield"
                     type="number"
-                    name="triceps"
+                    step="0.1"
                     value={this.state.triceps}
-                    step="0.01"
                     onChange={this.setTriceps}
-                    />
+                  />
                 </div>
 
                 <div className="inputbox">
                   Subscapular skinfold (mm):
-                  <input
+                  <TextField
+                    id="subscapularfield"
                     type="number"
-                    name="subscapular"
+                    step="0.1"
                     value={this.state.subscapular}
-                    step="0.01"
                     onChange={this.setSubscapular}
-                    />
+                  />
                 </div>
               </div>
             </div>
@@ -417,6 +394,7 @@ export default class Calculator extends React.Component {
           bmi={this.getBmi()}
           recumbent={this.state.recumbent}
           oedema={this.state.oedema}
+          unknownBirthDate={this.state.unknownBirthDate}
 
           weight={this.state.weight}
           height={this.state.height}
