@@ -46,8 +46,6 @@ export default class Results extends React.Component {
     super(props);
 
     this.state = {
-      plotdata: {},
-      showplot: false,
       currentplot: '',
     }
 
@@ -425,16 +423,14 @@ export default class Results extends React.Component {
 
   togglePlot(keyw) {
     // If user presses same plot button twice
-    if (this.state.showplot && keyw === this.state.currentplot) {
+    if (keyw === this.state.currentplot) {
       this.setState({
-        showplot: false,
         currentplot: '',
       });
       return;
     }
 
     this.setState({
-      showplot: true,
       currentplot: keyw,
     });
   }
@@ -543,7 +539,7 @@ export default class Results extends React.Component {
   render() {
     let plot = this.getPlot();
     let showplot = !(Object.keys(plot).length === 0 && plot.constructor === Object);
-    
+
     return (
       <div>
         <div className="results">
