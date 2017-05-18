@@ -45,10 +45,6 @@ export default class Plot extends React.Component {
   render() {
     // add default zoom level around patient
 
-    // add label to end of each line
-
-    // reduce number of data points by factor of 10 or more
-
     let table = this.props.plotdata.table;
 
     let SD4_SD3 = [];

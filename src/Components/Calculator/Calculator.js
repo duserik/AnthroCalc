@@ -59,27 +59,41 @@ export default class Calculator extends React.Component {
   }
 
   setDateOfBirth(date) {
+    if (date > this.state.dateOfVisit) {
+      this.setState({
+        dateOfBirth: this.state.dateOfVisit,
+      });
+      return;
+    }
+
     this.setState({
       dateOfBirth: date,
     });
   }
 
   randomDateOfBirth() {
-    if (this.state.dateOfBirth === undefined) {
+    if (this.state.dateOfBirth === undefined || this.state.dateOfVisit === undefined) {
       return;
     }
 
     let year = this.state.dateOfBirth.getFullYear();
     let month = this.state.dateOfBirth.getMonth();
-    let daysInMonth = new Date(year, month, 0).getDate();
-    let day = Math.floor(Math.random() * (daysInMonth - 1)) + 1;
+
+    let visityear = this.state.dateOfVisit.getFullYear();
+    let visitmonth = this.state.dateOfVisit.getMonth();
+    let visitday = this.state.dateOfVisit.getDate();
+
+    let daysInMonth = new Date(year, month, 0).getDate() - 1;
+
+    let maxDay = daysInMonth;
+    if (year === visityear && month === visitmonth) {
+      maxDay = visitday;
+    }
+
+    let day = Math.floor(Math.random() * maxDay) + 1;
     let newDate = new Date(year, month, day);
 
-    // prevent setting a random date higher than the date of visit
-
-    this.setState({
-      dateOfBirth: newDate,
-    });
+    this.setDateOfBirth(newDate);
   }
 
   unknownDateOfBirth() {

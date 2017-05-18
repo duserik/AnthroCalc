@@ -541,6 +541,9 @@ export default class Results extends React.Component {
   }
 
   render() {
+    let plot = this.getPlot();
+    let showplot = !(Object.keys(plot).length === 0 && plot.constructor === Object);
+    
     return (
       <div>
         <div className="results">
@@ -559,10 +562,9 @@ export default class Results extends React.Component {
           </div>
         </div>
 
-        {this.state.showplot &&
+        {showplot &&
         <Plot
-          plotdata={this.getPlot()}
-          showplot={this.state.showplot}
+          plotdata={plot}
           />
         }
       </div>
