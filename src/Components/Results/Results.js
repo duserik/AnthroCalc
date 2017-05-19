@@ -1,7 +1,9 @@
 import React from 'react';
 import LinearProgress from 'material-ui/LinearProgress';
 import RaisedButton from 'material-ui/RaisedButton';
-import ActionAndroid from 'material-ui/svg-icons/action/android';
+import EditorShowChart from 'material-ui/svg-icons/editor/show-chart';
+
+import {colors} from '../../data/colorcodes';
 
 import {wfl_boys} from '../../data/Centile_Tables/wfl_boys';
 import {wfl_girls} from '../../data/Centile_Tables/wfl_girls';
@@ -407,22 +409,22 @@ export default class Results extends React.Component {
 
   getColor(value) {
     if (Math.abs(value) > 3) {
-      return 'black';
+      return colors.black;
     }
 
     if (Math.abs(value) > 2) {
-      return 'red';
+      return colors.red;
     }
 
     if (Math.abs(value) > 1) {
-      return 'yellow';
+      return colors.yellow;
     }
 
-    return 'green';
+    return colors.green;
   }
 
   togglePlot(keyw) {
-    // If user presses same plot button twice
+    // If user presses same plot button twice, close it
     if (keyw === this.state.currentplot) {
       this.setState({
         currentplot: '',
@@ -531,7 +533,7 @@ export default class Results extends React.Component {
         </div>
         <div className="rchartbutton">
           <RaisedButton
-            icon={<ActionAndroid />}
+            icon={<EditorShowChart />}
             onClick={() => this.togglePlot(keyw)}
             style={{
               height: '100%',

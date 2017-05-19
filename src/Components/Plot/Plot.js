@@ -3,6 +3,8 @@ import ReactHighcharts from 'react-highcharts';
 import HighchartsMore from 'highcharts-more';
 HighchartsMore(ReactHighcharts.Highcharts);
 
+import {colors} from '../../data/colorcodes';
+
 export default class Plot extends React.Component {
   constructor(props) {
     super(props);
@@ -138,24 +140,24 @@ export default class Plot extends React.Component {
           value: this.props.plotdata.measurement2,
           zIndex: 5,
         },
-        this.getPlotlines('+3 SD', SD4_SD3, 'black'),
-        this.getPlotlines('+2 SD', SD3_SD2, 'red'),
-        this.getPlotlines('+1 SD', SD2_SD1, 'yellow'),
-        this.getPlotlines('Median', SD1_nSD1, 'green'),
-        this.getPlotlines('-1 SD', nSD1_nSD2, 'yellow'),
-        this.getPlotlines('-2 SD', nSD2_nSD3, 'red'),
-        this.getPlotlines('-3 SD', nSD3_nSD4, 'black'),
+        this.getPlotlines('+3 SD', SD4_SD3, colors.black),
+        this.getPlotlines('+2 SD', SD3_SD2, colors.red),
+        this.getPlotlines('+1 SD', SD2_SD1, colors.yellow),
+        this.getPlotlines('Median', SD1_nSD1, colors.green),
+        this.getPlotlines('-1 SD', nSD1_nSD2, colors.yellow),
+        this.getPlotlines('-2 SD', nSD2_nSD3, colors.red),
+        this.getPlotlines('-3 SD', nSD3_nSD4, colors.black),
       ]
     },
     series: [
-      this.getSeries('arearange', '+3 SD', SD4_SD3, 'black'),
-      this.getSeries('arearange', '+2 SD', SD3_SD2, 'red'),
-      this.getSeries('arearange', '+1 SD', SD2_SD1, 'yellow'),
-      this.getSeries('arearange', '+1 SD', SD1_nSD1, 'green'),
-      this.getSeries('arearange', '-1 SD', nSD1_nSD2, 'yellow'),
-      this.getSeries('arearange', '-2 SD', nSD2_nSD3, 'red'),
-      this.getSeries('arearange', '-3 SD', nSD3_nSD4, 'black'),
-      this.getSeries('line', 'Median', SD0, 'black'),
+      this.getSeries('arearange', '+3 SD', SD4_SD3, colors.black),
+      this.getSeries('arearange', '+2 SD', SD3_SD2, colors.red),
+      this.getSeries('arearange', '+1 SD', SD2_SD1, colors.yellow),
+      this.getSeries('arearange', '+1 SD', SD1_nSD1, colors.green),
+      this.getSeries('arearange', '-1 SD', nSD1_nSD2, colors.yellow),
+      this.getSeries('arearange', '-2 SD', nSD2_nSD3, colors.red),
+      this.getSeries('arearange', '-3 SD', nSD3_nSD4, colors.black),
+      this.getSeries('line', 'Median', SD0, colors.black),
     ]
   };
 
