@@ -104,7 +104,7 @@ export default class Calculator extends React.Component {
   }
 
   setRecumbentStatus() {
-    let height = this.state.height;
+    let height = Number(this.state.height);
     if (this.state.recumbent) {
       height += 0.7;
     } else {
@@ -125,37 +125,37 @@ export default class Calculator extends React.Component {
 
   setWeight(event, value) {
     this.setState({
-      weight: value,
+      weight: Number(value),
     });
   }
 
   setHeight(event, value) {
     this.setState({
-      height: value,
+      height: Number(value),
     });
   }
 
   setHeadCircumference(event, value) {
     this.setState({
-      head: value,
+      head: Number(value),
     });
   }
 
   setMUAC(event, value) {
     this.setState({
-      muac: value,
+      muac: Number(value),
     });
   }
 
   setTriceps(event, value) {
     this.setState({
-      triceps: value,
+      triceps: Number(value),
     });
   }
 
   setSubscapular(event, value) {
     this.setState({
-      subscapular: value,
+      subscapular: Number(value),
     });
   }
 
