@@ -2,10 +2,11 @@ import React from 'react';
 import Results from '../Results/Results';
 import DatePicker from 'material-ui/DatePicker';
 import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
 
 import './Calculator.css';
+
+import {Inputfield} from './Inputfield'
 
 // Needed for onTouchTap
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -30,36 +31,21 @@ export default class Calculator extends React.Component {
       triceps: 8,
       subscapular: 7,
     };
-
-    this.setSex = this.setSex.bind(this);
-    this.setDateOfVisit = this.setDateOfVisit.bind(this);
-    this.setDateOfBirth = this.setDateOfBirth.bind(this);
-    this.randomDateOfBirth = this.randomDateOfBirth.bind(this);
-    this.unknownDateOfBirth = this.unknownDateOfBirth.bind(this);
-    this.setRecumbentStatus = this.setRecumbentStatus.bind(this);
-    this.setOedemaStatus = this.setOedemaStatus.bind(this);
-    this.setWeight = this.setWeight.bind(this);
-    this.setHeight = this.setHeight.bind(this);
-
-    this.setHeadCircumference = this.setHeadCircumference.bind(this);
-    this.setMUAC = this.setMUAC.bind(this);
-    this.setTriceps = this.setTriceps.bind(this);
-    this.setSubscapular = this.setSubscapular.bind(this);
   }
 
-  setSex(sex) {
+  setSex = sex => {
     this.setState({
       sex: sex,
     });
   }
 
-  setDateOfVisit(date) {
+  setDateOfVisit = date => {
     this.setState({
       dateOfVisit: date,
     });
   }
 
-  setDateOfBirth(date) {
+  setDateOfBirth = date => {
     if (date > this.state.dateOfVisit) {
       this.setState({
         dateOfBirth: this.state.dateOfVisit,
@@ -72,7 +58,7 @@ export default class Calculator extends React.Component {
     });
   }
 
-  randomDateOfBirth() {
+  randomDateOfBirth = () => {
     if (this.state.dateOfBirth === undefined || this.state.dateOfVisit === undefined) {
       return;
     }
@@ -97,13 +83,13 @@ export default class Calculator extends React.Component {
     this.setDateOfBirth(newDate);
   }
 
-  unknownDateOfBirth() {
+  unknownDateOfBirth = () => {
     this.setState({
       unknownBirthDate: !this.state.unknownBirthDate,
     });
   }
 
-  setRecumbentStatus() {
+  setRecumbentStatus = () =>{
     let height = Number(this.state.height);
     if (this.state.recumbent) {
       height += 0.7;
@@ -117,49 +103,49 @@ export default class Calculator extends React.Component {
     });
   }
 
-  setOedemaStatus() {
+  setOedemaStatus = () => {
     this.setState({
       oedema: !this.state.oedema,
     });
   }
 
-  setWeight(event, value) {
+  setWeight = (event, value) => {
     this.setState({
       weight: Number(value),
     });
   }
 
-  setHeight(event, value) {
+  setHeight = (event, value) => {
     this.setState({
       height: Number(value),
     });
   }
 
-  setHeadCircumference(event, value) {
+  setHeadCircumference = (event, value) => {
     this.setState({
       head: Number(value),
     });
   }
 
-  setMUAC(event, value) {
+  setMUAC = (event, value) => {
     this.setState({
       muac: Number(value),
     });
   }
 
-  setTriceps(event, value) {
+  setTriceps = (event, value) => {
     this.setState({
       triceps: Number(value),
     });
   }
 
-  setSubscapular(event, value) {
+  setSubscapular= (event, value) => {
     this.setState({
       subscapular: Number(value),
     });
   }
 
-  getBmi() {
+  getBmi = () => {
     let weight = this.state.weight;
     let height = this.state.height;
 
@@ -170,7 +156,7 @@ export default class Calculator extends React.Component {
     return Math.round(weight / Math.pow(height / 100, 2) * 100) / 100;
   }
 
-  getAge() {
+  getAge = () => {
     if (this.state.dateOfBirth === undefined || this.state.dateOfVisit === undefined || this.state.unknownBirthDate) {
       return '-';
     }
@@ -178,7 +164,7 @@ export default class Calculator extends React.Component {
     return (this.state.dateOfVisit - this.state.dateOfBirth) / 1000 / 60 / 60 / 24;
   }
 
-  getAgeText() {
+  getAgeText = () => {
     let age = this.getAge();
 
     if (age === '-') {
@@ -314,73 +300,45 @@ export default class Calculator extends React.Component {
 
             <div className="splitter">
               <div className="leftSide">
-                <div className="inputbox">
-                  Weight (kg):
-                  <TextField
-                    id="weightfield"
-                    type="number"
-                    step="0.1"
-                    value={this.state.weight}
-                    onChange={this.setWeight}
+                <Inputfield
+                  label='Weight (kg):'
+                  id='weightfield'
+                  value={this.state.weight}
+                  setValue={this.setWeight}
                   />
-                </div>
-
-                <div className="inputbox">
-                  Length/Height (cm):
-                  <TextField
-                    id="heightfield"
-                    type="number"
-                    step="0.1"
-                    value={this.state.height}
-                    onChange={this.setHeight}
+                <Inputfield
+                  label='Length/Height (cm):'
+                  id='heightfield'
+                  value={this.state.height}
+                  setValue={this.setHeight}
                   />
-                </div>
-
-                <div className="inputbox">
-                  Head circumference (cm):
-                  <TextField
-                    id="headfield"
-                    type="number"
-                    step="0.1"
-                    value={this.state.head}
-                    onChange={this.setHeadCircumference}
+                <Inputfield
+                  label='Head circumference (cm):'
+                  id='headfield'
+                  value={this.state.head}
+                  setValue={this.setHeadCircumference}
                   />
-                </div>
               </div>
 
               <div className="rightSide">
-                <div className="inputbox">
-                  MUAC (cm):
-                  <TextField
-                    id="muacfield"
-                    type="number"
-                    step="0.1"
-                    value={this.state.muac}
-                    onChange={this.setMUAC}
+                <Inputfield
+                  label='MUAC (cm):'
+                  id='muacfield'
+                  value={this.state.muac}
+                  setValue={this.setMUAC}
                   />
-                </div>
-
-                <div className="inputbox">
-                  Triceps skinfold (mm):
-                  <TextField
-                    id="tricepsfield"
-                    type="number"
-                    step="0.1"
-                    value={this.state.triceps}
-                    onChange={this.setTriceps}
+                <Inputfield
+                  label='Triceps skinfold (mm):'
+                  id='tricepsfield'
+                  value={this.state.triceps}
+                  setValue={this.setTriceps}
                   />
-                </div>
-
-                <div className="inputbox">
-                  Subscapular skinfold (mm):
-                  <TextField
-                    id="subscapularfield"
-                    type="number"
-                    step="0.1"
-                    value={this.state.subscapular}
-                    onChange={this.setSubscapular}
+                <Inputfield
+                  label='Subscapular skinfold (mm):'
+                  id='subscapularfield'
+                  value={this.state.subscapular}
+                  setValue={this.setSubscapular}
                   />
-                </div>
               </div>
             </div>
           </div>

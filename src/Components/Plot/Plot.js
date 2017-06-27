@@ -6,14 +6,7 @@ HighchartsMore(ReactHighcharts.Highcharts);
 import {colors} from '../../data/colorcodes';
 
 export default class Plot extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.getSeries = this.getSeries.bind(this);
-    this.getPlotlines = this.getPlotlines.bind(this);
-  }
-
-  getSeries(type, label, data, color) {
+  getSeries = (type, label, data, color) => {
     return {
       type: type,
       name: label,
@@ -29,7 +22,7 @@ export default class Plot extends React.Component {
     };
   }
 
-  getPlotlines(label, data, color) {
+  getPlotlines = (label, data, color) => {
     return {
       color: 'white',
       width: 0,
@@ -47,7 +40,7 @@ export default class Plot extends React.Component {
     }
   }
 
-  render() {
+  getConfig = () => {
     let table = this.props.plotdata.table;
 
     /*
@@ -82,7 +75,7 @@ export default class Plot extends React.Component {
     // if chart is based on age, divide days by 30.25 to get months
     let formatdivider = this.props.plotdata.agebased ? 30.25 : 1;
 
-    let config = {
+    return {
       title: {
         text: this.props.plotdata.title,
         floating: true,
@@ -161,11 +154,13 @@ export default class Plot extends React.Component {
         this.getSeries('line', 'Median', SD0, colors.black),
       ]
     };
+  }
 
+  render() {
     return (
       <div>
-        <ReactHighcharts config={config} />
+        <ReactHighcharts config={this.getConfig()} />
       </div>
-    );
+    )
   }
 }

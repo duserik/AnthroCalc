@@ -1,45 +1,9 @@
 import React from 'react';
-import LinearProgress from 'material-ui/LinearProgress';
-import RaisedButton from 'material-ui/RaisedButton';
-import EditorShowChart from 'material-ui/svg-icons/editor/show-chart';
 
 import {colors} from '../../data/colorcodes';
-
-import {wfl_boys} from '../../data/Centile_Tables/wfl_boys';
-import {wfl_girls} from '../../data/Centile_Tables/wfl_girls';
-import {wfa_girls} from '../../data/Centile_Tables/wfa_girls';
-import {wfa_boys} from '../../data/Centile_Tables/wfa_boys';
-import {lhfa_girls} from '../../data/Centile_Tables/lhfa_girls';
-import {lhfa_boys} from '../../data/Centile_Tables/lhfa_boys';
-import {bfa_boys} from '../../data/Centile_Tables/bfa_boys';
-import {bfa_girls} from '../../data/Centile_Tables/bfa_girls';
-import {hcfa_boys} from '../../data/Centile_Tables/hcfa_boys';
-import {hcfa_girls} from '../../data/Centile_Tables/hcfa_girls';
-import {acfa_boys} from '../../data/Centile_Tables/acfa_boys';
-import {acfa_girls} from '../../data/Centile_Tables/acfa_girls';
-import {tsfa_boys} from '../../data/Centile_Tables/tsfa_boys';
-import {tsfa_girls} from '../../data/Centile_Tables/tsfa_girls';
-import {ssfa_boys} from '../../data/Centile_Tables/ssfa_boys';
-import {ssfa_girls} from '../../data/Centile_Tables/ssfa_girls';
-
-import {wfl_boys_sd} from '../../data/SD_Tables/wfl_boys_sd';
-import {wfl_girls_sd} from '../../data/SD_Tables/wfl_girls_sd';
-import {wfa_girls_sd} from '../../data/SD_Tables/wfa_girls_sd';
-import {wfa_boys_sd} from '../../data/SD_Tables/wfa_boys_sd';
-import {lhfa_girls_sd} from '../../data/SD_Tables/lhfa_girls_sd';
-import {lhfa_boys_sd} from '../../data/SD_Tables/lhfa_boys_sd';
-import {bfa_boys_sd} from '../../data/SD_Tables/bfa_boys_sd';
-import {bfa_girls_sd} from '../../data/SD_Tables/bfa_girls_sd';
-import {hcfa_boys_sd} from '../../data/SD_Tables/hcfa_boys_sd';
-import {hcfa_girls_sd} from '../../data/SD_Tables/hcfa_girls_sd';
-import {acfa_boys_sd} from '../../data/SD_Tables/acfa_boys_sd';
-import {acfa_girls_sd} from '../../data/SD_Tables/acfa_girls_sd';
-import {tsfa_boys_sd} from '../../data/SD_Tables/tsfa_boys_sd';
-import {tsfa_girls_sd} from '../../data/SD_Tables/tsfa_girls_sd';
-import {ssfa_boys_sd} from '../../data/SD_Tables/ssfa_boys_sd';
-import {ssfa_girls_sd} from '../../data/SD_Tables/ssfa_girls_sd';
-
+import * as datasets from '../../data/index';
 import Plot from '../Plot/Plot';
+import {Resultline} from './Resultline';
 
 import './Results.css';
 
@@ -50,26 +14,9 @@ export default class Results extends React.Component {
     this.state = {
       currentplot: '',
     }
-
-    this.getWeightForLength = this.getWeightForLength.bind(this);
-    this.getWeightForAge = this.getWeightForAge.bind(this);
-    this.getLengthForAge = this.getLengthForAge.bind(this);
-    this.getBMIForAge = this.getBMIForAge.bind(this);
-    this.getHCForAge = this.getHCForAge.bind(this);
-    this.getMUACForAge = this.getMUACForAge.bind(this);
-    this.getTSForAge = this.getTSForAge.bind(this);
-    this.getSSForAge = this.getSSForAge.bind(this);
-
-    this.getColor = this.getColor.bind(this);
-    this.getResultLine = this.getResultLine.bind(this);
-
-    this.togglePlot = this.togglePlot.bind(this);
-
-    this.getPlotdata = this.getPlotdata.bind(this);
-    this.getPlot = this.getPlot.bind(this);
   }
 
-  getWeightForLength() {
+  getWeightForLength = () => {
     let sex = this.props.sex;
     let weight = this.props.weight;
     let height = this.props.height;
@@ -94,11 +41,11 @@ export default class Results extends React.Component {
     let maxheight = Math.round((lowheight + 0.1) * 10) / 10;
 
     // Collect the two LMS values for either male or female
-    let lowlms = wfl_boys[lowheight];
-    let highlms = wfl_boys[maxheight];
+    let lowlms = datasets.wfl_boys[lowheight];
+    let highlms = datasets.wfl_boys[maxheight];
     if (this.props.sex === 'female') {
-      lowlms = wfl_girls[lowheight];
-      highlms = wfl_girls[maxheight];
+      lowlms = datasets.wfl_girls[lowheight];
+      highlms = datasets.wfl_girls[maxheight];
     }
 
     // Get the number of steps.
@@ -117,17 +64,15 @@ export default class Results extends React.Component {
 
     // Calculate the zscore based on the lms values and the weight
     let value = this.calcZscore(weight, L, M, S);
-    let centile = this.getCentile(value);
-    let color = this.getColor(value);
 
     return {
       value: value,
-      centile: centile,
-      color: color,
+      centile: this.getCentile(value),
+      color: this.getColor(value)
     }
   }
 
-  getWeightForAge() {
+  getWeightForAge = () => {
     let sex = this.props.sex;
     let weight = this.props.weight;
     let age = this.props.age;
@@ -138,7 +83,7 @@ export default class Results extends React.Component {
     }
 
     // Get LMS values for the given parameters
-    let LMS = this.getLMS(sex, age, wfa_boys, wfa_girls);
+    let LMS = this.getLMS(sex, age, datasets.wfa_boys, datasets.wfa_girls);
 
     // If getLMS() returned '-', data could not be retrieved
     if (LMS === '-') {
@@ -151,16 +96,17 @@ export default class Results extends React.Component {
     return {
       value: wfa,
       centile: this.getCentile(wfa),
+      color: this.getColor(wfa)
     }
   }
 
-  getLengthForAge() {
+  getLengthForAge = () => {
     let sex = this.props.sex;
     let height = this.props.height;
     let age = this.props.age;
 
     // Get LMS values for the given parameters
-    let LMS = this.getLMS(sex, age, lhfa_boys, lhfa_girls);
+    let LMS = this.getLMS(sex, age, datasets.lhfa_boys, datasets.lhfa_girls);
 
     // If getLMS() returned '-', data could not be retrieved
     if (LMS === '-') {
@@ -173,10 +119,11 @@ export default class Results extends React.Component {
     return {
       value: lfa,
       centile: this.getCentile(lfa),
+      color: this.getColor(lfa)
     }
   }
 
-  getBMIForAge() {
+  getBMIForAge = () => {
     let sex = this.props.sex;
     let bmi = this.props.bmi;
     let age = this.props.age;
@@ -187,7 +134,7 @@ export default class Results extends React.Component {
     }
 
     // Get LMS values for the given parameters
-    let LMS = this.getLMS(sex, age, bfa_boys, bfa_girls);
+    let LMS = this.getLMS(sex, age, datasets.bfa_boys, datasets.bfa_girls);
 
     // If getLMS() returned '-', data could not be retrieved
     if (LMS === '-') {
@@ -200,16 +147,17 @@ export default class Results extends React.Component {
     return {
       value: bfa,
       centile: this.getCentile(bfa),
+      color: this.getColor(bfa)
     }
   }
 
-  getHCForAge() {
+  getHCForAge = () => {
     let sex = this.props.sex;
     let hc = this.props.head;
     let age = this.props.age;
 
     // Get LMS values for the given parameters
-    let LMS = this.getLMS(sex, age, hcfa_boys, hcfa_girls);
+    let LMS = this.getLMS(sex, age, datasets.hcfa_boys, datasets.hcfa_girls);
 
     // If getLMS() returned '-', data could not be retrieved
     if (LMS === '-') {
@@ -222,10 +170,11 @@ export default class Results extends React.Component {
     return {
       value: hcfa,
       centile: this.getCentile(hcfa),
+      color: this.getColor(hcfa)
     }
   }
 
-  getMUACForAge() {
+  getMUACForAge = () => {
     let sex = this.props.sex;
     let muac = this.props.muac;
     let age = this.props.age;
@@ -236,7 +185,7 @@ export default class Results extends React.Component {
     }
 
     // Get LMS values for the given parameters
-    let LMS = this.getLMS(sex, age, acfa_boys, acfa_girls);
+    let LMS = this.getLMS(sex, age, datasets.acfa_boys, datasets.acfa_girls);
 
     // If getLMS() returned '-', data could not be retrieved
     if (LMS === '-') {
@@ -249,10 +198,11 @@ export default class Results extends React.Component {
     return {
       value: acfa,
       centile: this.getCentile(acfa),
+      color: this.getColor(acfa)
     }
   }
 
-  getTSForAge() {
+  getTSForAge = () => {
     let sex = this.props.sex;
     let ts = this.props.triceps;
     let age = this.props.age;
@@ -263,7 +213,7 @@ export default class Results extends React.Component {
     }
 
     // Get LMS values for the given parameters
-    let LMS = this.getLMS(sex, age, tsfa_boys, tsfa_girls);
+    let LMS = this.getLMS(sex, age, datasets.tsfa_boys, datasets.tsfa_girls);
 
     // If getLMS() returned '-', data could not be retrieved
     if (LMS === '-') {
@@ -276,10 +226,11 @@ export default class Results extends React.Component {
     return {
       value: tsfa,
       centile: this.getCentile(tsfa),
+      color: this.getColor(tsfa)
     }
   }
 
-  getSSForAge() {
+  getSSForAge = () => {
     let sex = this.props.sex;
     let ss = this.props.subscapular;
     let age = this.props.age;
@@ -290,7 +241,7 @@ export default class Results extends React.Component {
     }
 
     // Get LMS values for the given parameters
-    let LMS = this.getLMS(sex, age, ssfa_boys, ssfa_girls);
+    let LMS = this.getLMS(sex, age, datasets.ssfa_boys, datasets.ssfa_girls);
 
     // If getLMS() returned '-', data could not be retrieved
     if (LMS === '-') {
@@ -303,6 +254,7 @@ export default class Results extends React.Component {
     return {
       value: ssfa,
       centile: this.getCentile(ssfa),
+      color: this.getColor(ssfa)
     }
   }
 
@@ -311,7 +263,7 @@ export default class Results extends React.Component {
   * The calculations performed in this function are adapted from the Anthro 3.2.2.1 source code.
   * @param zscore
   */
-  getCentile(zscore) {
+  getCentile = (zscore) => {
     let absoluteZscore = Math.abs(zscore);
 
     if (zscore === '-' || absoluteZscore > 3) {
@@ -344,7 +296,7 @@ export default class Results extends React.Component {
   * @param dataset_girls
   * @returns {*}
   */
-  getLMS(sex, age, dataset_boys, dataset_girls) {
+  getLMS = (sex, age, dataset_boys, dataset_girls) => {
     // If sex, y or age are undefined, return -
     if (sex === undefined || age === '-') {
       return '-';
@@ -376,7 +328,7 @@ export default class Results extends React.Component {
   * @param S
   * @returns {number}
   */
-  getSDX(num, L, M, S) {
+  getSDX = (num, L, M, S) => {
     return M * Math.pow((1 + L * S * num), (1 / L));
   }
 
@@ -389,7 +341,7 @@ export default class Results extends React.Component {
   * @param S
   * @returns {number}
   */
-  calcZscore(y, L, M, S) {
+  calcZscore = (y, L, M, S) => {
     let zscore = (Math.pow((y / M), L) - 1) / (S * L);
 
     if (zscore < -3) {
@@ -407,7 +359,7 @@ export default class Results extends React.Component {
     return zscore;
   }
 
-  getColor(value) {
+  getColor = (value) => {
     if (Math.abs(value) > 3) {
       return colors.black;
     }
@@ -423,7 +375,7 @@ export default class Results extends React.Component {
     return colors.green;
   }
 
-  togglePlot(keyw) {
+  togglePlot = (keyw) => {
     // If user presses same plot button twice, close it
     if (keyw === this.state.currentplot) {
       this.setState({
@@ -437,70 +389,42 @@ export default class Results extends React.Component {
     });
   }
 
-  getPlot() {
-    let plotdata = {};
+  getPlot = () => {
     let currentplot = this.state.currentplot;
+    let age = this.props.age;
 
     if (this.props.oedema) {
       if (currentplot === 'wfl' || currentplot === 'wfa' || currentplot === 'mfa') {
-        return plotdata;
+        return;
       }
     }
 
-    if (this.props.age === '-') {
+    if (age === '-' || this.props.unknownBirthDate) {
       if (currentplot !== 'wfl') {
-        return plotdata;
+        return;
       }
     }
 
-    if (this.props.age < 91) {
+    if (age < 91) {
       if (currentplot === 'acfa' || currentplot === 'tsfa' || currentplot === 'ssfa') {
-        return plotdata;
+        return;
       }
     }
 
-    if (this.props.unknownBirthDate) {
-      if (currentplot !== 'wfl') {
-        return plotdata;
-      }
-    }
+    let map = new Map();
+    map.set('wfl', this.getPlotdata(false, datasets.wfl_boys_sd, datasets.wfl_girls_sd, this.props.height, this.props.weight, 'Height (cm)', 'Weight (kg)', 'Weight-for-length'));
+    map.set('wfa', this.getPlotdata(true, datasets.wfa_boys_sd, datasets.wfa_girls_sd, age, this.props.weight, 'Age (months)', 'Weight (kg)', 'Weight-for-age'));
+    map.set('lfa', this.getPlotdata(true, datasets.lhfa_boys_sd, datasets.lhfa_girls_sd, age, this.props.height, 'Age (months)', 'Height (cm)', 'Length-for-age'));
+    map.set('bfa', this.getPlotdata(true, datasets.bfa_boys_sd, datasets.bfa_girls_sd, age, this.props.bmi, 'Age (months)', 'BMI', 'BMI-for-age'));
+    map.set('acfa', this.getPlotdata(true, datasets.acfa_boys_sd, datasets.acfa_girls_sd, age, this.props.muac, 'Age (months)', 'MUAC', 'MUAC-for-age'));
+    map.set('hcfa', this.getPlotdata(true, datasets.hcfa_boys_sd, datasets.hcfa_girls_sd, age, this.props.head, 'Age (months)', 'Head Circumference (cm)', 'HC-for-age'));
+    map.set('tsfa', this.getPlotdata(true, datasets.tsfa_boys_sd, datasets.tsfa_girls_sd, age, this.props.triceps, 'Age (months)', 'BMI', 'TSF-for-age'));
+    map.set('ssfa', this.getPlotdata(true, datasets.ssfa_boys_sd, datasets.ssfa_girls_sd, age, this.props.subscapular, 'Age (months)', 'Subscapular Skinfold (cm)', 'SSF-for-age'));
 
-    if (this.state.currentplot === 'wfl') {
-      plotdata = this.getPlotdata(false, wfl_boys_sd, wfl_girls_sd, this.props.height, this.props.weight, 'Height (cm)', 'Weight (kg)', 'Weight-for-length');
-    }
-
-    if (this.state.currentplot === 'wfa') {
-      plotdata = this.getPlotdata(true, wfa_boys_sd, wfa_girls_sd, this.props.age, this.props.weight, 'Age (months)', 'Weight (kg)', 'Weight-for-age');
-    }
-
-    if (this.state.currentplot === 'lfa') {
-      plotdata = this.getPlotdata(true, lhfa_boys_sd, lhfa_girls_sd, this.props.age, this.props.height, 'Age (months)', 'Height (cm)', 'Length-for-age');
-    }
-
-    if (this.state.currentplot === 'bfa') {
-      plotdata = this.getPlotdata(true, bfa_boys_sd, bfa_girls_sd, this.props.age, this.props.bmi, 'Age (months)', 'BMI', 'BMI-for-age');
-    }
-
-    if (this.state.currentplot === 'hcfa') {
-      plotdata = this.getPlotdata(true, hcfa_boys_sd, hcfa_girls_sd, this.props.age, this.props.head, 'Age (months)', 'Head Circumference (cm)', 'HC-for-age');
-    }
-
-    if (this.state.currentplot === 'acfa') {
-      plotdata = this.getPlotdata(true, acfa_boys_sd, acfa_girls_sd, this.props.age, this.props.muac, 'Age (months)', 'MUAC', 'MUAC-for-age');
-    }
-
-    if (this.state.currentplot === 'tsfa') {
-      plotdata = this.getPlotdata(true, tsfa_boys_sd, tsfa_girls_sd, this.props.age, this.props.triceps, 'Age (months)', 'BMI', 'TSF-for-age');
-    }
-
-    if (this.state.currentplot === 'ssfa') {
-      plotdata = this.getPlotdata(true, ssfa_boys_sd, ssfa_girls_sd, this.props.age, this.props.subscapular, 'Age (months)', 'Subscapular Skinfold (cm)', 'SSF-for-age');
-    }
-
-    return plotdata;
+    return map.get(currentplot);
   }
 
-  getPlotdata(agebased,table1, table2, measurement1, measurement2, xtitle, ytitle, title) {
+  getPlotdata = (agebased,table1, table2, measurement1, measurement2, xtitle, ytitle, title) => {
     let table = this.props.sex === 'male' ? table1 : table2;
     return {
       table: table,
@@ -513,57 +437,65 @@ export default class Results extends React.Component {
     }
   }
 
-  getResultLine(label, value, keyw) {
-    return (
-      <div className="resultline">
-        <div className="rlabel">
-          <p>{label}</p>
-        </div>
-        <div className="rbar">
-          <LinearProgress
-            mode="determinate"
-            value={value.centile}
-            color={this.getColor(value.value)}
-            style={{
-              height: '100%',
-            }} />
-        </div>
-        <div className="rzscore">
-          <p>{Math.round(value.value * 100) / 100}</p>
-        </div>
-        <div className="rchartbutton">
-          <RaisedButton
-            icon={<EditorShowChart />}
-            onClick={() => this.togglePlot(keyw)}
-            style={{
-              height: '100%',
-              width: '100%',
-              minWidth: '20px',
-            }} />
-        </div>
-      </div>
-    );
-  }
-
   render() {
     let plot = this.getPlot();
-    let showplot = !(Object.keys(plot).length === 0 && plot.constructor === Object);
+    let showplot = (plot !== undefined);
 
     return (
       <div>
         <div className="results">
           <div className="resultsLeft">
-            {this.getResultLine('Weight-for-length', this.getWeightForLength(), 'wfl')}
-            {this.getResultLine('Weight-for-age', this.getWeightForAge(), 'wfa')}
-            {this.getResultLine('Length-for-age', this.getLengthForAge(), 'lfa')}
-            {this.getResultLine('BMI-for-age', this.getBMIForAge(), 'bfa')}
+            <Resultline
+              label='Weight-for-length'
+              getValues={this.getWeightForLength}
+              keyword='wfl'
+              togglePlot={this.togglePlot}
+              />
+            <Resultline
+              label='Weight-for-age'
+              getValues={this.getWeightForAge}
+              keyword='wfa'
+              togglePlot={this.togglePlot}
+              />
+            <Resultline
+              label='Length-for-age'
+              getValues={this.getLengthForAge}
+              keyword='lfa'
+              togglePlot={this.togglePlot}
+              />
+            <Resultline
+              label='BMI-for-age'
+              getValues={this.getBMIForAge}
+              keyword='bfa'
+              togglePlot={this.togglePlot}
+              />
           </div>
 
           <div className="resultsRight">
-            {this.getResultLine('HC-for-age', this.getHCForAge(), 'hcfa')}
-            {this.getResultLine('MUAC-for-age', this.getMUACForAge(), 'acfa')}
-            {this.getResultLine('TSF-for-age', this.getTSForAge(), 'tsfa')}
-            {this.getResultLine('SSF-for-age', this.getSSForAge(), 'ssfa')}
+            <Resultline
+              label='HC-for-age'
+              getValues={this.getHCForAge}
+              keyword='hcfa'
+              togglePlot={this.togglePlot}
+              />
+            <Resultline
+              label='MUAC-for-age'
+              getValues={this.getMUACForAge}
+              keyword='acfa'
+              togglePlot={this.togglePlot}
+              />
+            <Resultline
+              label='TSF-for-age'
+              getValues={this.getTSForAge}
+              keyword='tsfa'
+              togglePlot={this.togglePlot}
+              />
+            <Resultline
+              label='SSF-for-age'
+              getValues={this.getSSForAge}
+              keyword='ssfa'
+              togglePlot={this.togglePlot}
+              />
           </div>
         </div>
 
